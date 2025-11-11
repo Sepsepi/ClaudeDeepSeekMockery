@@ -95,7 +95,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
           </div>
         )}
 
-        <div className="relative flex items-end gap-3">
+        <div className="relative flex items-center gap-3">
           {/* Attach button */}
           <input
             ref={fileInputRef}
@@ -109,7 +109,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={disabled}
-            className="btn-icon w-11 h-11 flex-shrink-0 disabled:opacity-50"
+            className="btn-icon w-11 h-11 flex-shrink-0 disabled:opacity-50 self-end"
             title="Upload image"
           >
             <svg
@@ -134,8 +134,8 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
               placeholder={selectedImage ? "Add a caption (optional)..." : "Message..."}
               disabled={disabled}
               rows={1}
-              className="w-full resize-none bg-bg-200 border-1.5 border-border-100/15 text-text-100 placeholder:text-text-300 px-4 py-3 pr-12 rounded-xl max-h-[200px] focus:outline-none focus:border-accent-main-100 focus:ring-2 focus:ring-accent-main-100/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ minHeight: '48px' }}
+              className="w-full resize-none bg-bg-200 border-1.5 border-border-100/15 text-text-100 placeholder:text-text-300 px-4 py-2 pr-12 rounded-xl max-h-[200px] focus:outline-none focus:border-accent-main-100 focus:ring-2 focus:ring-accent-main-100/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ minHeight: '42px', height: '42px', lineHeight: '1.5' }}
             />
 
             {input.length > 1000 && (
@@ -149,7 +149,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
           <button
             onClick={handleSubmit}
             disabled={disabled || (!input.trim() && !selectedImage)}
-            className="btn-primary w-11 h-11 flex-shrink-0 p-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
+            className="btn-primary w-11 h-11 flex-shrink-0 flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none self-end"
             title="Send message"
           >
             <svg

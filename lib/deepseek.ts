@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 // DeepSeek uses OpenAI-compatible API
 export const deepseek = new OpenAI({
@@ -6,20 +7,8 @@ export const deepseek = new OpenAI({
   baseURL: 'https://api.deepseek.com',
 });
 
-export type MessageContent =
-  | string
-  | Array<{
-      type: 'text' | 'image_url';
-      text?: string;
-      image_url?: {
-        url: string;
-      };
-    }>;
-
-export type Message = {
-  role: 'user' | 'assistant' | 'system';
-  content: MessageContent;
-};
+// Use OpenAI's native types for compatibility
+export type Message = ChatCompletionMessageParam;
 
 export async function streamDeepSeekResponse(
   messages: Message[],

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deepseek, type Message } from '@/lib/deepseek';
+import { deepseek } from '@/lib/deepseek';
 
 export const runtime = 'edge';
 
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         try {
           const completion = await deepseek.chat.completions.create({
             model: 'deepseek-chat',
-            messages: messages as Message[],
+            messages,
             stream: true,
             temperature: 0.7,
             max_tokens: 4000,

@@ -1,25 +1,55 @@
-# ClaudeDeepSeekMockery
+# AI Chat Application
 
-A Claude.ai-inspired chat interface powered by DeepSeek AI with image recognition, authentication, and conversation persistence.
+> A fast, clean, mobile-first AI chat application with a focus on conversation quality and user experience.
 
-## Features
+**Built with:** Next.js 14, Supabase, and DeepSeek AI
 
-- **AI-Powered Chat**: Real-time streaming responses using DeepSeek API
-- **Image Recognition**: Upload and analyze images with DeepSeek vision
-- **User Authentication**: Email/password and Google OAuth support
-- **Conversation Management**: Save and load chat history
-- **Account Settings**: Theme selection, notifications, profile management
-- **Modern UI**: Clean design with light green accent theme
-- **Serverless Architecture**: Built on Next.js 14 with edge functions
+---
 
-## Tech Stack
+## 🎯 Philosophy
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes (serverless)
-- **Database**: Supabase (PostgreSQL)
-- **Auth**: Supabase Auth (email + OAuth)
-- **AI**: DeepSeek API (OpenAI-compatible)
-- **Deployment**: Vercel
+This is a **simple product done extremely well** - a conversational AI interface that prioritizes:
+- **Feel & Tone** over feature bloat
+- **Performance** over complexity
+- **Clean UX** over excessive onboarding
+- **Human conversation** over robotic interactions
+
+Inspired by Claude.ai's design philosophy, delivering what users actually need.
+
+---
+
+## ✨ Features
+
+### Core Chat Experience
+- **Real-time Streaming** - Smooth AI responses with no waiting
+- **Image Upload** - Attach and discuss images in conversations
+- **Conversation History** - Persistent chat threads with search
+- **Multiple Chat Modes** - Assistant, Creative, Technical, Casual styles
+- **Anonymous Mode** - Private chat without history tracking
+
+### User Management
+- **Google OAuth + Email** - Flexible, secure authentication
+- **Theme System** - Light/dark mode with persistence
+- **Activity Stats** - Track conversations and messages
+- **Subscription Tiers** - Ready for Free/Pro/Enterprise plans
+- **Profile Settings** - Customize name, preferences, notifications
+
+### Technical Excellence
+- **Edge Runtime** - Fast API responses
+- **Mobile-First** - Fully responsive on all devices
+- **Type-Safe** - Complete TypeScript coverage
+- **Row Level Security** - Secure database access
+- **Clean Architecture** - Modular, extensible code
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS
+**Backend:** Supabase (PostgreSQL + Auth + Storage)
+**AI:** DeepSeek API (OpenAI-compatible, swappable)
+**Deployment:** Vercel Edge Functions
+**Auth:** @supabase/ssr with OAuth2 PKCE
 
 ---
 
@@ -44,8 +74,8 @@ npm install
 
 1. Go to your Supabase project: https://supabase.com/dashboard
 2. Navigate to **SQL Editor**
-3. Copy the contents of `supabase-schema-safe.sql`
-4. Paste and run the SQL to create tables, storage bucket, and policies
+3. Copy the contents of `supabase-schema.sql`
+4. Paste and run the SQL to create tables, policies, and triggers
 
 ### 3. Configure Environment Variables
 
@@ -194,20 +224,33 @@ ClaudeDeepSeekMockery/
 
 **user_preferences**
 - `user_id` (UUID, primary key, foreign key to auth.users)
-- `theme` (text: 'light', 'dark', or 'auto')
+- `display_name` (text, optional)
+- `theme` (text: 'light' or 'dark')
 - `notifications_enabled` (boolean)
-- `language` (text)
+- `anonymous_mode` (boolean)
+- `chat_mode` (text: 'assistant', 'creative', 'technical', 'casual')
+- `subscription_tier` (text: 'free', 'pro', 'enterprise')
+- `created_at` (timestamp)
+- `updated_at` (timestamp)
+
+**admin_stats**
+- `id` (UUID, primary key)
+- `user_id` (UUID, foreign key to auth.users)
+- `total_conversations` (integer)
+- `total_messages` (integer)
+- `last_active` (timestamp)
 - `created_at` (timestamp)
 - `updated_at` (timestamp)
 
 **Storage**
-- `chat-images` bucket for uploaded images
+- `chat-images` bucket for uploaded images (when not in anonymous mode)
 
 ### Security
 
-- Row Level Security (RLS) enabled
-- Users can only access their own conversations and messages
-- Automatic timestamp updates via triggers
+- Row Level Security (RLS) enabled on all tables
+- Users can only access their own data
+- Automatic stats updates via database triggers
+- Secure cookie handling with @supabase/ssr
 
 ---
 

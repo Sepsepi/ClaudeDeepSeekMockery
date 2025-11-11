@@ -21,11 +21,13 @@ export default function HomePage() {
   >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [incognitoConversations, setIncognitoConversations] = useState<Set<string>>(new Set());
+  const [chatMode, setChatMode] = useState<'assistant' | 'creative' | 'technical' | 'casual'>('assistant');
 
   const router = useRouter();
   const supabase = createBrowserClient();
 
-  // Check authentication
+  // Check authentication and load preferences
   useEffect(() => {
     const checkUser = async () => {
       const {
@@ -39,6 +41,7 @@ export default function HomePage() {
 
       setUser(user);
       loadConversations();
+      loadUserPreferences(user.id);
     };
 
     checkUser();
@@ -50,11 +53,44 @@ export default function HomePage() {
         router.push('/auth/login');
       } else {
         setUser(session.user);
+        loadUserPreferences(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const loadUserPreferences = async (userId: string) => {
+    const { data } = await supabase
+      .from('user_preferences')
+      .select('chat_mode')
+      .eq('user_id', userId)
+      .single();
+
+    if (data) {
+      setChatMode(data.chat_mode || 'assistant');
+    }
+  };
+
+  const handleToggleIncognito = (conversationId: string, isIncognito: boolean) => {
+    setIncognitoConversations(prev => {
+      const newSet = new Set(prev);
+      if (isIncognito) {
+        newSet.add(conversationId);
+        // Clear messages when enabling incognito on current conversation
+        if (conversationId === currentConversationId) {
+          setMessages([]);
+        }
+      } else {
+        newSet.delete(conversationId);
+        // Reload messages when disabling incognito on current conversation
+        if (conversationId === currentConversationId) {
+          loadConversation(conversationId);
+        }
+      }
+      return newSet;
+    });
+  };
 
   const loadConversations = async () => {
     const { data, error } = await supabase
@@ -70,6 +106,11 @@ export default function HomePage() {
   const loadConversation = async (conversationId: string) => {
     setCurrentConversationId(conversationId);
     setMessages([]);
+
+    // Don't load messages if conversation is in incognito mode
+    if (incognitoConversations.has(conversationId)) {
+      return;
+    }
 
     const { data, error } = await supabase
       .from('messages')
@@ -165,9 +206,12 @@ export default function HomePage() {
 
     setIsLoading(true);
 
-    // Upload image if present
+    // Check if current conversation is in incognito mode
+    const isIncognito = currentConversationId ? incognitoConversations.has(currentConversationId) : false;
+
+    // Upload image if present (only if not in incognito mode)
     let imageUrl: string | undefined;
-    if (image) {
+    if (image && !isIncognito) {
       imageUrl = await uploadImage(image) || undefined;
     }
 
@@ -180,18 +224,20 @@ export default function HomePage() {
     };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Create or use existing conversation
+    // Create or use existing conversation (skip if incognito mode)
     let convId = currentConversationId;
-    if (!convId) {
-      convId = await createNewConversation(content);
+    if (!isIncognito) {
       if (!convId) {
-        setIsLoading(false);
-        return;
+        convId = await createNewConversation(content);
+        if (!convId) {
+          setIsLoading(false);
+          return;
+        }
       }
-    }
 
-    // Save user message
-    await saveMessage(convId, 'user', content, imageUrl);
+      // Save user message
+      await saveMessage(convId, 'user', content, imageUrl);
+    }
 
     // Add assistant message placeholder
     const assistantMessageId = `assistant-${Date.now()}`;
@@ -204,37 +250,42 @@ export default function HomePage() {
     setMessages((prev) => [...prev, assistantMessage]);
 
     try {
-      // Format messages for API - include images if present
+      // Format messages for API
+      // Note: DeepSeek doesn't support image analysis yet, so we just mention the image in text
       const formattedMessages = messages.map((m) => {
         if (m.imageUrl) {
           return {
             role: m.role,
-            content: [
-              { type: 'image_url', image_url: { url: m.imageUrl } },
-              { type: 'text', text: m.content },
-            ],
+            content: `${m.content} [User attached an image: ${m.imageUrl}]`,
           };
         }
         return { role: m.role, content: m.content };
       });
 
-      // Add current message with image if present
-      const currentMessage = imageUrl
-        ? {
-            role: 'user' as const,
-            content: [
-              { type: 'image_url', image_url: { url: imageUrl } },
-              { type: 'text', text: content },
-            ],
-          }
-        : { role: 'user' as const, content };
+      // Add current message
+      const currentMessage = {
+        role: 'user' as const,
+        content: imageUrl
+          ? `${content} [User attached an image: ${imageUrl}]`
+          : content,
+      };
+
+      // Add system prompt based on chat mode
+      const systemPrompts = {
+        assistant: 'You are a helpful, balanced AI assistant. Provide clear and accurate responses.',
+        creative: 'You are a creative and imaginative AI assistant. Think outside the box and provide expressive, innovative responses.',
+        technical: 'You are a precise and technical AI assistant. Provide detailed, accurate, and well-structured technical responses.',
+        casual: 'You are a friendly and conversational AI assistant. Respond in a casual, warm, and approachable manner.',
+      };
+
+      const systemMessage = { role: 'system' as const, content: systemPrompts[chatMode] };
 
       // Stream response from DeepSeek
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...formattedMessages, currentMessage],
+          messages: [systemMessage, ...formattedMessages, currentMessage],
         }),
       });
 
@@ -264,8 +315,10 @@ export default function HomePage() {
         }
       }
 
-      // Save assistant message
-      await saveMessage(convId, 'assistant', fullResponse);
+      // Save assistant message (skip if incognito mode)
+      if (!isIncognito && convId) {
+        await saveMessage(convId, 'assistant', fullResponse);
+      }
 
       // Remove streaming indicator
       setMessages((prev) =>
@@ -317,6 +370,7 @@ export default function HomePage() {
         currentConversationId={currentConversationId || undefined}
         onNewChat={handleNewChat}
         onSelectConversation={loadConversation}
+        onToggleIncognito={handleToggleIncognito}
         userEmail={user.email}
       />
 
