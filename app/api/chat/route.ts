@@ -7,6 +7,8 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
+    console.log('Received messages:', messages);
+
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
         { error: 'Messages array is required' },
@@ -19,6 +21,7 @@ export async function POST(req: NextRequest) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          console.log('Starting DeepSeek API call...');
           const completion = await deepseek.chat.completions.create({
             model: 'deepseek-chat',
             messages,
@@ -27,6 +30,8 @@ export async function POST(req: NextRequest) {
             max_tokens: 4000,
           });
 
+          console.log('DeepSeek API responded, streaming chunks...');
+
           for await (const chunk of completion) {
             const content = chunk.choices[0]?.delta?.content || '';
             if (content) {
@@ -34,8 +39,10 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          console.log('Stream completed');
           controller.close();
         } catch (error: any) {
+          console.error('DeepSeek API error:', error);
           controller.error(error);
         }
       },
