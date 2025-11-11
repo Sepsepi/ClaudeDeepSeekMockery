@@ -1,0 +1,418 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   CLAUDE.AI DESIGN SYSTEM - LIGHT GREEN THEME
+   ============================================ */
+
+/* Color System */
+:root {
+  /* Light Green Accent (Hue 140) */
+  --accent-main-000: 140 50% 45%;
+  --accent-main-100: 140 54.2% 51.2%;
+  --accent-main-200: 140 63.1% 59.6%;
+  --accent-main-hover: 140 58% 55%;
+
+  /* Secondary Accent (Blue) */
+  --accent-secondary-000: 210 73.7% 40.2%;
+  --accent-secondary-100: 210 70.9% 51.6%;
+  --accent-secondary-200: 210 65.5% 67.1%;
+
+  /* Backgrounds */
+  --bg-000: 0 0% 100%;
+  --bg-100: 48 33.3% 97.1%;
+  --bg-200: 53 28.6% 94.5%;
+  --bg-300: 48 25% 92.2%;
+  --bg-400: 50 20.7% 88.6%;
+
+  /* Text */
+  --text-000: 60 2.6% 7.6%;
+  --text-100: 60 2.6% 7.6%;
+  --text-200: 60 2.5% 23.3%;
+  --text-300: 51 3.1% 43.7%;
+  --text-400: 48 4.8% 59.2%;
+
+  /* Borders */
+  --border-100: 30 3.3% 11.8%;
+  --border-200: 30 3.3% 11.8%;
+  --border-300: 51 16.5% 84.5%;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Constants */
+  --always-white: 0 0% 100%;
+  --always-black: 0 0% 0%;
+}
+
+[data-mode="dark"] {
+  color-scheme: dark;
+
+  /* Light Green Accent (brighter in dark) */
+  --accent-main-000: 140 58% 55%;
+  --accent-main-100: 140 63.1% 59.6%;
+  --accent-main-200: 140 73.1% 69.6%;
+  --accent-main-hover: 140 68% 65%;
+
+  /* Secondary Accent */
+  --accent-secondary-000: 210 65.5% 67.1%;
+  --accent-secondary-100: 210 70.9% 51.6%;
+  --accent-secondary-200: 210 70.9% 51.6%;
+
+  /* Backgrounds */
+  --bg-000: 60 2.1% 18.4%;
+  --bg-100: 60 2.7% 14.5%;
+  --bg-200: 30 3.3% 11.8%;
+  --bg-300: 60 2.6% 7.6%;
+  --bg-400: 0 0% 0%;
+
+  /* Text */
+  --text-000: 48 33.3% 97.1%;
+  --text-100: 48 33.3% 97.1%;
+  --text-200: 50 9% 73.7%;
+  --text-300: 48 4.8% 59.2%;
+  --text-400: 48 3.4% 29.2%;
+
+  /* Borders */
+  --border-100: 51 16.5% 84.5%;
+  --border-200: 51 16.5% 84.5%;
+  --border-300: 30 3.3% 11.8%;
+
+  /* Shadows (more subtle in dark mode) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) {
+    color-scheme: dark;
+    --accent-main-000: 140 58% 55%;
+    --accent-main-100: 140 63.1% 59.6%;
+    --accent-main-200: 140 73.1% 69.6%;
+    --accent-main-hover: 140 68% 65%;
+    --accent-secondary-000: 210 65.5% 67.1%;
+    --accent-secondary-100: 210 70.9% 51.6%;
+    --accent-secondary-200: 210 70.9% 51.6%;
+    --bg-000: 60 2.1% 18.4%;
+    --bg-100: 60 2.7% 14.5%;
+    --bg-200: 30 3.3% 11.8%;
+    --bg-300: 60 2.6% 7.6%;
+    --bg-400: 0 0% 0%;
+    --text-000: 48 33.3% 97.1%;
+    --text-100: 48 33.3% 97.1%;
+    --text-200: 50 9% 73.7%;
+    --text-300: 48 4.8% 59.2%;
+    --text-400: 48 3.4% 29.2%;
+    --border-100: 51 16.5% 84.5%;
+    --border-200: 51 16.5% 84.5%;
+    --border-300: 30 3.3% 11.8%;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  outline-color: hsl(var(--accent-secondary-100));
+  scrollbar-width: thin;
+  scrollbar-color: hsla(var(--border-300) / 0.35) transparent;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+               'Helvetica Neue', Arial, sans-serif;
+  background-color: hsl(var(--bg-100));
+  color: hsl(var(--text-100));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsla(var(--border-300) / 0.3);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsla(var(--border-300) / 0.5);
+  background-clip: padding-box;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: hsl(var(--accent-main-100));
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+  line-height: 1.5;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: hsl(var(--accent-main-hover));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: hsl(var(--text-100));
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border-100) / 0.15);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: hsl(var(--bg-300));
+  border-color: hsl(var(--border-100) / 0.25);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 0.5rem;
+  border: none;
+  background: transparent;
+  color: hsl(var(--text-200));
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+  background-color: hsl(var(--bg-300));
+  color: hsl(var(--text-100));
+}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+
+.input-field {
+  background-color: hsl(var(--bg-000));
+  border: 1.5px solid hsl(var(--border-100) / 0.15);
+  color: hsl(var(--text-100));
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  transition: all 0.15s ease;
+}
+
+.input-field::placeholder {
+  color: hsl(var(--text-300));
+}
+
+.input-field:hover:not(:disabled) {
+  border-color: hsl(var(--border-100) / 0.25);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: hsl(var(--accent-main-100));
+  box-shadow: 0 0 0 3px hsl(var(--accent-main-100) / 0.1);
+  background-color: hsl(var(--bg-000));
+}
+
+.input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: hsl(var(--bg-200));
+}
+
+textarea.input-field {
+  resize: none;
+  font-family: inherit;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+  background-color: hsl(var(--bg-000));
+  border: 1px solid hsl(var(--border-100) / 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: hsl(var(--border-100) / 0.15);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.divider {
+  border: 0;
+  border-top: 1px solid hsl(var(--border-100) / 0.1);
+  margin: 1rem 0;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--bg-300)) 0%,
+    hsl(var(--bg-200)) 50%,
+    hsl(var(--bg-300)) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   FOCUS VISIBLE (ACCESSIBILITY)
+   ============================================ */
+
+*:focus-visible {
+  outline: 2px solid hsl(var(--accent-secondary-100));
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid hsl(var(--accent-secondary-100));
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background-color: hsl(var(--accent-main-100) / 0.2);
+  color: hsl(var(--text-100));
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+}
